@@ -18,13 +18,18 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    this.currentCard = this.game.stack.pop()!;
-    console.log(this.currentCard);
-    this.pickCardAnimation = true;
+    if (!this.pickCardAnimation) {
+      this.currentCard = this.game.stack.pop()!;
+      this.pickCardAnimation = true;
+
+      setTimeout(() => {
+        this.game.playerCard.push(this.currentCard);
+        this.pickCardAnimation = false;
+      }, 1000)
+    }
   }
 
   newGame() {
     this.game = new Game();
-    console.log(this.game)
   }
 }
