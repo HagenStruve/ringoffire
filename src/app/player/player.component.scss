@@ -2,19 +2,23 @@
     width: 300px;
     display: flex;
     align-items: center;
-    background-color: orange;
+    background-color: rgb(150, 150, 150, 0.8);
     border-top-left-radius: 50px;
     border-bottom-left-radius: 50px;
 
     img {
-        width: 100px;
-        width: 100px;
+        width: 70px;
+        width: 70px;
         object-fit: cover;
         border-radius: 10px;
     }
 
-    span{
+    span {
         font-size: 32px;
         margin-left: 16px;
     }
+}
+
+.player-activ {
+    background-color: orange !important;
 }
