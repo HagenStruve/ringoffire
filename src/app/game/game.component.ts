@@ -40,12 +40,10 @@ export class GameComponent implements OnInit {
 
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
-      this.saveGame();
 
       setTimeout(() => {
         this.game.playerCard.push(this.currentCard);
         this.pickCardAnimation = false;
-        this.saveGame();
       }, 1000)
     }
   }
@@ -54,10 +52,10 @@ export class GameComponent implements OnInit {
     this.game = new Game();
     // const db = getFirestore();
 
-    // const docRef = await addDoc(collection(db, "games"), {
-    //   addtoJson(){}
-    // });
-    // console.log("Document written with ID: ", docRef.id);
+    const docRef = await addDoc(collection(db, "games"), {
+      addtoJson(){}
+    });
+    console.log("Document written with ID: ", docRef.id);
 
 
     // const coll = collection(this.firestore, 'games');
@@ -75,12 +73,11 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
-        this.saveGame();
       }
     });
   }
 
-  saveGame() {
-    updateDoc(this.docRef, this.game.addtoJson())
-  }
+  // saveGame() {
+  //   updateDoc(this.docRef, this.game.addtoJson())
+  // }
 }
