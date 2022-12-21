@@ -15,6 +15,15 @@ export class Game {
         shuffle(this.stack);
        
     }
+
+    public addtoJson(): ReturnType <any> {
+         return {
+            players: this.players,
+            stack: this.stack,
+            playerCard: this.playerCard,
+            currentPlayer: this.currentPlayer
+        }
+    }
 }
 
 
