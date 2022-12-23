@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 
 })
 export class GameComponent implements OnInit {
-  
+
   game!: Game;
 
   games$: Observable<any>;
@@ -41,24 +41,25 @@ export class GameComponent implements OnInit {
       this.gameId = params['id'];
       console.log(params);
 
-      this.docRef = doc(db, "games", this.gameId);
-      const docSnap = await getDoc(this.docRef);
-      let game: any = docSnap.data();
+      this.games$.subscribe(async () => {
+        this.docRef = doc(db, "games", this.gameId);
+        const docSnap = await getDoc(this.docRef);
+        let game: any = docSnap.data();
 
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        this.game.currentPlayer = game.currentPlayer;
-        this.game.playerCard = game.playerCard;
-        this.game.players = game.players;
-        this.game.stack = game.stack;
-        this.game.pickCardAnimation = game.pickCardAnimation;
-        this.game.currentCard = game.currentCard;
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          this.game.currentPlayer = game.currentPlayer;
+          this.game.playerCard = game.playerCard;
+          this.game.players = game.players;
+          this.game.stack = game.stack;
+          this.game.pickCardAnimation = game.pickCardAnimation;
+          this.game.currentCard = game.currentCard;
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      });
     });
-
 
   }
 
