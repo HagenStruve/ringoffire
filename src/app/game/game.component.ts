@@ -13,8 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 
 })
 export class GameComponent implements OnInit {
-  pickCardAnimation = false;
-  currentCard: string = '';
+  
   game!: Game;
 
   games$: Observable<any>;
@@ -42,8 +41,8 @@ export class GameComponent implements OnInit {
       this.gameId = params['id'];
       console.log(params);
 
-      const docRef = doc(db, "games", this.gameId);
-      const docSnap = await getDoc(docRef);
+      this.docRef = doc(db, "games", this.gameId);
+      const docSnap = await getDoc(this.docRef);
       let game: any = docSnap.data();
 
       if (docSnap.exists()) {
@@ -52,6 +51,8 @@ export class GameComponent implements OnInit {
         this.game.playerCard = game.playerCard;
         this.game.players = game.players;
         this.game.stack = game.stack;
+        this.game.pickCardAnimation = game.pickCardAnimation;
+        this.game.currentCard = game.currentCard;
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -62,17 +63,17 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    if (!this.pickCardAnimation) {
-      this.currentCard = this.game.stack.pop()!;
-      this.pickCardAnimation = true;
+    if (!this.game.pickCardAnimation) {
+      this.game.currentCard = this.game.stack.pop()!;
+      this.game.pickCardAnimation = true;
 
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
       this.saveGame();
 
       setTimeout(() => {
-        this.game.playerCard.push(this.currentCard);
-        this.pickCardAnimation = false;
+        this.game.playerCard.push(this.game.currentCard);
+        this.game.pickCardAnimation = false;
         this.saveGame();
       }, 1000)
     }
