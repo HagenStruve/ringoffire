@@ -3,6 +3,10 @@ export class Game {
     public stack: string[] = [];
     public playerCard: string[] = [];
     public currentPlayer:number = 0;
+  static currentPlayer: number;
+  static playerCard: string[];
+  static players: string[];
+  static stack: string[];
 
     constructor() {
         for (let i = 1; i < 14; i++) {
@@ -16,7 +20,7 @@ export class Game {
        
     }
 
-    public addtoJson(): ReturnType <any> {
+     public addtoJson(): any {
          return {
             players: this.players,
             stack: this.stack,

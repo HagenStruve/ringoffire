@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from '../models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import { Firestore, collectionData, collection, addDoc, getFirestore, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collectionData, collection, addDoc, getFirestore, updateDoc, doc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -18,7 +19,10 @@ export class GameComponent implements OnInit {
 
   games$: Observable<any>;
 
-  constructor(public dialog: MatDialog, private firestore: Firestore) {
+  gameId;
+  docRef: any;
+
+  constructor(private route: ActivatedRoute, public dialog: MatDialog, private firestore: Firestore) {
 
 
     const coll = collection(this.firestore, 'games');
@@ -29,8 +33,32 @@ export class GameComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.newGame();
+
+    const db = getFirestore();
+
+    this.route.params.subscribe(async (params): Promise<void> => {
+      this.gameId = params['id'];
+      console.log(params);
+
+      const docRef = doc(db, "games", this.gameId);
+      const docSnap = await getDoc(docRef);
+      let game: any = docSnap.data();
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        this.game.currentPlayer = game.currentPlayer;
+        this.game.playerCard = game.playerCard;
+        this.game.players = game.players;
+        this.game.stack = game.stack;
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    });
+
+
   }
 
   takeCard() {
@@ -40,30 +68,18 @@ export class GameComponent implements OnInit {
 
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+      this.saveGame();
 
       setTimeout(() => {
         this.game.playerCard.push(this.currentCard);
         this.pickCardAnimation = false;
+        this.saveGame();
       }, 1000)
     }
   }
 
   async newGame() {
     this.game = new Game();
-    // const db = getFirestore();
-
-    const docRef = await addDoc(collection(db, "games"), {
-      addtoJson(){}
-    });
-    console.log("Document written with ID: ", docRef.id);
-
-
-    // const coll = collection(this.firestore, 'games');
-    // this.games$ = collectionData(coll);
-
-    // this.games$.setDoc(doc(db, "cities", "new-city-id"), data);
-
-    // this.firestore.collection('games').add({'Hallo: Welt'})
   }
 
   openDialog(): void {
@@ -73,11 +89,12 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.saveGame();
       }
     });
   }
 
-  // saveGame() {
-  //   updateDoc(this.docRef, this.game.addtoJson())
-  // }
+  saveGame() {
+    updateDoc(this.docRef, this.game.addtoJson())
+  }
 }
