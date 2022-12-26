@@ -6,6 +6,14 @@
     border-top-left-radius: 50px;
     border-bottom-left-radius: 50px;
 
+    @media (max-width: 720px) {
+        width: 70px;
+        margin-left: 20px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+    }
+
     img {
         width: 70px;
         width: 70px;
