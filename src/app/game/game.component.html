@@ -16,6 +16,7 @@
     <img src="assets/img/game_over.svg">
 </div>
 
+
 <div *ngIf="!gameOver" class="field">
 
     <div class="card-stack">
@@ -26,6 +27,7 @@
 
         <!-- Stack for played cards -->
         <img *ngFor="let card of game.playerCard" class="playedCard" src="assets/img/cards/{{ card }}.png">
+
         <!-- Current card (Animation) -->
         <img (click)="takeCard()" *ngIf="game.pickCardAnimation" class="pick-card" style="right: 25px;"
             src="assets/img/cards/{{ game.currentCard }}.png">
@@ -39,3 +41,5 @@
 <button *ngIf="!gameOver" (click)="openDialog()" mat-fab color="primary" class="btn-add button">
     <mat-icon>add</mat-icon>
 </button>
+
+<img class="preload-img" src="assets/img/cards/{{ game.stack[game.stack.length -1] }}.png">
