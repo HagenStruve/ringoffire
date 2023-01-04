@@ -1,33 +1,32 @@
 .player {
-    width: 300px;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     background-color: rgb(150, 150, 150, 0.8);
-    border-top-left-radius: 50px;
+    width: 120px;
+    margin-left: 20px;
+    border-top-left-radius: 0px;
     border-bottom-left-radius: 50px;
-
-    @media (max-width: 720px) {
-        width: 70px;
-        margin-left: 20px;
-        border-top-left-radius: 0px;
-        border-bottom-left-radius: 50px;
-        border-bottom-right-radius: 50px;
-    }
+    border-bottom-right-radius: 50px;
 
     img {
         width: 70px;
         width: 70px;
         object-fit: cover;
         border-radius: 10px;
+        margin-top: 10px;
+        margin-bottom: 5px;
     }
 
     span {
-        font-size: 25px;
-        margin-left: 16px;
+        width: 110px;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 17px;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        height: 25px;
     }
 }
 

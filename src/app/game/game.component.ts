@@ -5,6 +5,7 @@ import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player
 import { Firestore, collectionData, collection, addDoc, getFirestore, updateDoc, doc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
 
 @Component({
   selector: 'app-game',
@@ -20,6 +21,7 @@ export class GameComponent implements OnInit {
 
   gameId;
   docRef: any;
+  gameOver = false;
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog, private firestore: Firestore) {
 
@@ -51,6 +53,7 @@ export class GameComponent implements OnInit {
           this.game.currentPlayer = game.currentPlayer;
           this.game.playerCard = game.playerCard;
           this.game.players = game.players;
+          this.game.player_imges = game.player_imges;
           this.game.stack = game.stack;
           this.game.pickCardAnimation = game.pickCardAnimation;
           this.game.currentCard = game.currentCard;
@@ -64,20 +67,23 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    if (!this.game.pickCardAnimation) {
-      this.game.currentCard = this.game.stack.pop()!;
-      this.game.pickCardAnimation = true;
+    if (this.game.stack.length == 0) {
+      this.gameOver = true;
+    } else
+      if (!this.game.pickCardAnimation) {
+        this.game.currentCard = this.game.stack.pop()!;
+        this.game.pickCardAnimation = true;
 
-      this.game.currentPlayer++;
-      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
-      this.saveGame();
-
-      setTimeout(() => {
-        this.game.playerCard.push(this.game.currentCard);
-        this.game.pickCardAnimation = false;
+        this.game.currentPlayer++;
+        this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
         this.saveGame();
-      }, 1000)
-    }
+
+        setTimeout(() => {
+          this.game.playerCard.push(this.game.currentCard);
+          this.game.pickCardAnimation = false;
+          this.saveGame();
+        }, 1000)
+      }
   }
 
   async newGame() {
@@ -91,6 +97,7 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.game.player_imges.push('1.webp');
         this.saveGame();
       }
     });
@@ -98,5 +105,22 @@ export class GameComponent implements OnInit {
 
   saveGame() {
     updateDoc(this.docRef, this.game.addtoJson())
+  }
+
+  editPlayer(playerID) {
+    const dialogRef = this.dialog.open(EditPlayerComponent, {
+    });
+
+
+    dialogRef.afterClosed().subscribe((change: string) => {
+      if (change) {
+        if (change == 'DELETE') {
+          this.game.players.splice(playerID, 1);
+          this.game.player_imges.splice(playerID, 1);
+        } else
+          this.game.player_imges[playerID] = change;
+      }
+    });
+    this.saveGame();
   }
 }
