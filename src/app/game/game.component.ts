@@ -70,7 +70,7 @@ export class GameComponent implements OnInit {
     if (this.game.stack.length == 0) {
       this.gameOver = true;
     } else
-      if (!this.game.pickCardAnimation) {
+      if (!this.game.pickCardAnimation == this.game.players.length > 1) {
         this.game.currentCard = this.game.stack.pop()!;
         this.game.pickCardAnimation = true;
 
@@ -89,6 +89,7 @@ export class GameComponent implements OnInit {
 
   async newGame() {
     this.game = new Game();
+    this.gameOver = false;
   }
 
   openDialog(): void {

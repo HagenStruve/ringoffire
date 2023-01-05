@@ -14,6 +14,9 @@
 
 <div *ngIf="gameOver" class="game-over">
     <img src="assets/img/game_over.svg">
+    <div class="start-label-box">
+        <img (click)="newGame()" src="assets/img/startlabel.png">
+    </div>
 </div>
 
 

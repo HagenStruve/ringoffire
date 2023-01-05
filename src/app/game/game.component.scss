@@ -174,14 +174,25 @@ app-player {
     }
 }
 
-.game-over{
+.game-over {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 
-    img{
+    img {
         width: 40%;
     }
+
+    @media (max-width: 720px) {
+        margin-top: 30%;
+    }
+}
+
+.start-label-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .preload-img {
